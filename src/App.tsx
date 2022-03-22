@@ -1,4 +1,5 @@
 import {Category} from "./models/category";
+import './categories.styles.scss';
 
 const App = () => {
   const categories: Category[] = [
