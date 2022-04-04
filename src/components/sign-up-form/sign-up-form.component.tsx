@@ -6,6 +6,7 @@ import {
 import FormInput from "../form-input/form-input.component";
 
 import './sign-up-form.styles.scss';
+import Button from "../button/button.component";
 
 interface DefaultFormFields {
   displayName: string,
@@ -98,7 +99,7 @@ const SignUpForm = () => {
           value={confirmPassword}
         />
 
-        <button type={"submit"}>Sign Up</button>
+        <Button type={"submit"}>Sign Up</Button>
       </form>
     </div>
   );
