@@ -34,10 +34,9 @@ const SignInForm = () => {
       const response = await signInAuthUserWithEmailAndPassword(email, password);
       console.log(response);
       resetFormFields();
-
     } catch (error: any) {
-
-      console.log("User auth encountered an error", error);
+      alert("Auth encountered an error");
+      console.log(error);
     }
   }
 
@@ -74,7 +73,7 @@ const SignInForm = () => {
         />
         <div className={"buttons-container"}>
           <Button type={"submit"}>Sign In</Button>
-          <Button onClick={signInWithGoogleUser} buttonType={'google'}>
+          <Button type={"button"} onClick={signInWithGoogleUser} buttonType={'google'}>
             Google Sign In
           </Button>
         </div>
