@@ -3,7 +3,7 @@ import {UserInfo} from "firebase/auth";
 
 interface UserContextInterface {
   currentUser: UserInfo | null | undefined
-  setCurrentUser: (user: UserInfo) => void
+  setCurrentUser: (user: UserInfo | undefined) => void
 }
 
 const defaultState: UserContextInterface = {
