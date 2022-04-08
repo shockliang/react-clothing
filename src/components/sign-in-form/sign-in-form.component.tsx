@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useContext, useState} from "react";
+import {ChangeEvent, FormEvent, useState} from "react";
 import {
   createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
@@ -6,7 +6,6 @@ import {
 } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, {ButtonStyle} from "../button/button.component";
-import {UserContext} from "../../contexts/user.context";
 
 import './sign-in-form.styles.scss';
 
@@ -23,7 +22,6 @@ const defaultFormFields: DefaultFormFields = {
 const SignInForm = () => {
   const [formFields, setFormFields] = useState<DefaultFormFields>(defaultFormFields);
   const {email, password} = formFields;
-  const {setCurrentUser} = useContext(UserContext);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -34,8 +32,7 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(email, password);
-      setCurrentUser(response?.user!);
+      await signInAuthUserWithEmailAndPassword(email, password);
       resetFormFields();
     } catch (error: any) {
       alert("Auth encountered an error");
@@ -48,9 +45,7 @@ const SignInForm = () => {
   }
 
   const signInWithGoogleUser = async () => {
-    const {user} = await signInWithGooglePopup();
-    setCurrentUser(user);
-    await createUserDocumentFromAuth(user, {});
+    await signInWithGooglePopup();
   }
 
   return (
