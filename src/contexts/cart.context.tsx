@@ -1,4 +1,4 @@
-import {createContext, FC, useState} from "react";
+import {createContext, FC, useEffect, useState} from "react";
 import {CartItemModel} from "../models/cart-item";
 import {Product} from "../models/product";
 
@@ -6,14 +6,16 @@ interface CartContextInterface {
   isCartOpen: boolean,
   setIsCartOpen: (isCartOpen: boolean) => void,
   cartItems: CartItemModel[],
-  addItemToCart: (product: Product) => void
+  addItemToCart: (product: Product) => void,
+  cartCount: number
 }
 
 const defaultStates: CartContextInterface = {
   isCartOpen: false,
   setIsCartOpen: (isCartOpen) => null,
   cartItems: [],
-  addItemToCart: (product) => null
+  addItemToCart: (product) => null,
+  cartCount: 0
 }
 
 const addCartItem = (cartItems: CartItemModel[], productToAdd: Product): CartItemModel[] => {
@@ -34,11 +36,17 @@ export const CartContext = createContext<CartContextInterface>(defaultStates);
 export const CartProvider: FC = ({children}) => {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
+  const [cartCount, setCartCount] = useState<number>(0);
+
+  useEffect(() => {
+    const newCartCount = cartItems.reduce(((total, cartItem) => total + cartItem.quantity), 0);
+    setCartCount(newCartCount);
+  }, [cartItems])
 
   const addItemToCart = (productToAdd: Product) => {
     setCartItems(addCartItem(cartItems, productToAdd));
   }
 
   return (<CartContext.Provider
-    value={{isCartOpen, setIsCartOpen, cartItems, addItemToCart}}>{children}</CartContext.Provider>);
+    value={{isCartOpen, setIsCartOpen, cartItems, addItemToCart, cartCount}}>{children}</CartContext.Provider>);
 }
