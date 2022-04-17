@@ -7,6 +7,7 @@ interface CartContextInterface {
   setIsCartOpen: (isCartOpen: boolean) => void,
   cartItems: CartItemModel[],
   addItemToCart: (product: Product) => void,
+  removeItemFromCart: (cartItem: CartItemModel) => void,
   cartCount: number
 }
 
@@ -15,6 +16,7 @@ const defaultStates: CartContextInterface = {
   setIsCartOpen: (isCartOpen) => null,
   cartItems: [],
   addItemToCart: (product) => null,
+  removeItemFromCart: (cartItem) => null,
   cartCount: 0
 }
 
@@ -29,6 +31,18 @@ const addCartItem = (cartItems: CartItemModel[], productToAdd: Product): CartIte
 
   // whole new item
   return [...cartItems, {...productToAdd, quantity: 1}];
+}
+
+const removeCartItem = (cartItems: CartItemModel[], cartItemToRemove: CartItemModel): CartItemModel[] => {
+  const existCartItem = cartItems.find((cartItem) => cartItem.id === cartItemToRemove.id);
+
+  if(existCartItem && existCartItem.quantity === 1) {
+    return cartItems.filter(cartItem => cartItem.id !== cartItemToRemove.id);
+  }
+
+  return cartItems.map((cartItem) => cartItem.id === cartItemToRemove.id
+    ? {...cartItem, quantity: cartItem.quantity - 1}
+    : cartItem)
 }
 
 export const CartContext = createContext<CartContextInterface>(defaultStates);
@@ -47,6 +61,10 @@ export const CartProvider: FC = ({children}) => {
     setCartItems(addCartItem(cartItems, productToAdd));
   }
 
+  const removeItemFromCart = (cartItemToRemoved: CartItemModel) => {
+    setCartItems(removeCartItem(cartItems, cartItemToRemoved));
+  }
+
   return (<CartContext.Provider
-    value={{isCartOpen, setIsCartOpen, cartItems, addItemToCart, cartCount}}>{children}</CartContext.Provider>);
+    value={{isCartOpen, setIsCartOpen, cartItems, addItemToCart, removeItemFromCart, cartCount}}>{children}</CartContext.Provider>);
 }
