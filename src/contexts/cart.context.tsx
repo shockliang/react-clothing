@@ -9,7 +9,8 @@ interface CartContextInterface {
   addItemToCart: (product: Product) => void,
   removeItemFromCart: (cartItem: CartItemModel) => void,
   clearItemFromCart: (cartItem: CartItemModel) => void,
-  cartCount: number
+  cartCount: number,
+  cartTotal: number
 }
 
 const defaultStates: CartContextInterface = {
@@ -19,7 +20,8 @@ const defaultStates: CartContextInterface = {
   addItemToCart: (product) => null,
   removeItemFromCart: (cartItem) => null,
   clearItemFromCart: (cartItem) => null,
-  cartCount: 0
+  cartCount: 0,
+  cartTotal: 0
 }
 
 const addCartItem = (cartItems: CartItemModel[], productToAdd: Product): CartItemModel[] => {
@@ -57,10 +59,16 @@ export const CartProvider: FC = ({children}) => {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
   const [cartCount, setCartCount] = useState<number>(0);
+  const [cartTotal, setCartTotal] = useState<number>(0);
 
   useEffect(() => {
     const newCartCount = cartItems.reduce(((total, cartItem) => total + cartItem.quantity), 0);
     setCartCount(newCartCount);
+  }, [cartItems])
+
+  useEffect(() => {
+    const newCartTotal = cartItems.reduce(((total, cartItem) => total + cartItem.quantity * cartItem.price), 0);
+    setCartTotal(newCartTotal);
   }, [cartItems])
 
   const addItemToCart = (productToAdd: Product) => {
@@ -83,7 +91,8 @@ export const CartProvider: FC = ({children}) => {
       addItemToCart,
       removeItemFromCart,
       clearItemFromCart,
-      cartCount}}
+      cartCount,
+      cartTotal}}
   >
     {children}
   </CartContext.Provider>);
