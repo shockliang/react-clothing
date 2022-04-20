@@ -1,5 +1,4 @@
-import {createContext, FC, useState} from "react";
-import PRODUCTS from '../shop-data.json';
+import {createContext, FC, useState, useEffect} from "react";
 import {Product} from "../models/product";
 
 interface ProductsContextInterface {
@@ -13,7 +12,8 @@ const defaultStates: ProductsContextInterface = {
 export const ProductsContext = createContext<ProductsContextInterface>(defaultStates);
 
 export const ProductsProvider: FC = ({children}) => {
-  const [products, setProducts] = useState(PRODUCTS);
+  const [products, setProducts] = useState([]);
+
   const value = {products}
   return <ProductsContext.Provider value={value}>{children}</ProductsContext.Provider>
 }
