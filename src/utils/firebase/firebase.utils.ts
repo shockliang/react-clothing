@@ -11,9 +11,13 @@ import {
   NextOrObserver,
   UserInfo
 } from 'firebase/auth'
-import {getFirestore, doc, getDoc, setDoc, collection, writeBatch} from 'firebase/firestore';
-import {Product} from "../../models/product";
+import {
+  getFirestore, doc, getDoc, setDoc,
+  collection, writeBatch, query, getDocs,
+  CollectionReference,
+} from 'firebase/firestore';
 import {ShopData} from "../../models/shop-data";
+import {Product} from "../../models/product";
 
 const firebaseConfig = {
   apiKey: "apikey",
@@ -50,6 +54,21 @@ export const addCollectionAndDocuments = async (collectionKey: string, objectsTo
   await batch.commit();
   console.log('batch done');
 }
+
+export const getCategoriesAndDocuments = async () => {
+
+  const collectionRef = collection(db, 'categories') as CollectionReference<ShopData>
+  const q = query(collectionRef);
+  const querySnapshot = await getDocs(q);
+  const categories = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const {title, items} = docSnapshot.data();
+
+    acc.set(title.toLowerCase(), items);
+    return acc;
+  }, new Map<string, Product[]>() );
+
+  return categories;
+};
 
 export const createUserDocumentFromAuth = async (userAuth: UserInfo | undefined, additionalInformation: any) => {
   if (!userAuth) return;
