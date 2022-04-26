@@ -1,5 +1,5 @@
 import {useParams} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
+import {Fragment, useContext, useEffect, useState} from "react";
 import {CategoriesContext} from "../../contexts/categories.context";
 import {Product} from "../../models/product";
 import './category.styles.scss';
@@ -11,20 +11,23 @@ const Category = () => {
   const [products, setProducts] = useState<Product[]>(categoryMap.get(category!)!)
 
   useEffect(() => {
-    if(!category) return;
+    if (!category) return;
     const productsFromMap = categoryMap.get(category);
 
-    if(!productsFromMap) return;
+    if (!productsFromMap) return;
 
     setProducts(productsFromMap);
   }, [category, categoryMap])
 
   return (
-    <div className={"category-container"}>
-      {
-        products && products.map((product) => (<ProductCard key={product.id} product={product}/>))
-      }
-    </div>
+    <Fragment>
+      <h2 className={"category-title"}>{category?.toUpperCase()}</h2>
+      <div className={"category-container"}>
+        {
+          products && products.map((product) => (<ProductCard key={product.id} product={product}/>))
+        }
+      </div>
+    </Fragment>
   )
 }
 
