@@ -1,16 +1,16 @@
-import {ButtonHTMLAttributes, ReactChildren} from "react";
-import './button.styles.scss';
+import React, {ButtonHTMLAttributes, ReactChildren} from "react";
+import {BaseButton, GoogleSignInButton, InvertedButton} from "./button.styles";
 
 export enum ButtonStyle {Google, Inverted}
 
-function getButtonTypeName(buttonType: ButtonStyle | undefined) {
+const getButton = (buttonType: ButtonStyle | undefined) => {
   switch (buttonType) {
     case ButtonStyle.Google:
-      return 'google-sign-in'
-    case ButtonStyle.Inverted:
-      return 'inverted'
+      return GoogleSignInButton;
+    case ButtonStyle.Inverted :
+      return InvertedButton;
     default:
-      return ''
+      return BaseButton;
   }
 }
 
@@ -20,13 +20,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = ({children, buttonType, ...otherProps}: ButtonProps) => {
+  const CustomButton = getButton(buttonType);
   return (
-    <button
-      className={`button-container ${getButtonTypeName(buttonType)}`}
-      {...otherProps}
-    >
-      {children}
-    </button>
+    <CustomButton {...otherProps}>{children}</CustomButton>
   )
 }
 
