@@ -1,4 +1,4 @@
-import {createContext, FC, useEffect, useState} from "react";
+import {createContext, FC, useReducer} from "react";
 import {CartItemModel} from "../models/cart-item";
 import {Product} from "../models/product";
 
@@ -24,6 +24,50 @@ const defaultStates: CartContextInterface = {
   cartTotal: 0
 }
 
+interface CartState {
+  isCartOpen: boolean,
+  cartItems: CartItemModel[],
+  cartCount: number,
+  cartTotal: number
+}
+
+const INITIAL_STATE: CartState = {
+  isCartOpen: false,
+  cartItems: [],
+  cartCount: 0,
+  cartTotal: 0
+};
+
+enum CartActionTypes {
+  SET_CART_ITEMS = 'SET_CART_ITEMS',
+  SET_CART_OPEN = 'SET_CART_OPEN'
+}
+
+interface CartAction {
+  type: CartActionTypes,
+  payload: CartActionPayload
+}
+
+interface CartActionPayload {
+  cartItems: CartItemModel[],
+  cartCount: number,
+  cartTotal: number
+}
+
+const cartReducer = (state: CartState, action: CartAction) => {
+  const {type, payload} = action;
+
+  switch (type) {
+    case CartActionTypes.SET_CART_ITEMS:
+      return {
+        ...state,
+        ...payload
+      }
+    default:
+      throw new Error(`Unhandled type of ${type} in cartReducer`);
+  }
+}
+
 const addCartItem = (cartItems: CartItemModel[], productToAdd: Product): CartItemModel[] => {
   const existCartItem = cartItems.find((cartItem) => cartItem.id === productToAdd.id);
 
@@ -40,7 +84,7 @@ const addCartItem = (cartItems: CartItemModel[], productToAdd: Product): CartIte
 const removeCartItem = (cartItems: CartItemModel[], cartItemToRemove: CartItemModel): CartItemModel[] => {
   const existCartItem = cartItems.find((cartItem) => cartItem.id === cartItemToRemove.id);
 
-  if(existCartItem && existCartItem.quantity === 1) {
+  if (existCartItem && existCartItem.quantity === 1) {
     return cartItems.filter(cartItem => cartItem.id !== cartItemToRemove.id);
   }
 
@@ -56,43 +100,50 @@ const clearCartItem = (cartItems: CartItemModel[], cartItemToClear: CartItemMode
 export const CartContext = createContext<CartContextInterface>(defaultStates);
 
 export const CartProvider: FC = ({children}) => {
-  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
-  const [cartItems, setCartItems] = useState<CartItemModel[]>([]);
-  const [cartCount, setCartCount] = useState<number>(0);
-  const [cartTotal, setCartTotal] = useState<number>(0);
+  const [{cartItems, cartCount, cartTotal, isCartOpen}, dispatch] = useReducer(cartReducer, INITIAL_STATE);
 
-  useEffect(() => {
-    const newCartCount = cartItems.reduce(((total, cartItem) => total + cartItem.quantity), 0);
-    setCartCount(newCartCount);
-  }, [cartItems])
+  const updateCartItemsReducer = (newCartItems: CartItemModel[]) => {
+    const newCartCount = newCartItems
+      .reduce(((total, cartItem) => total + cartItem.quantity), 0);
+    const newCartTotal = newCartItems
+      .reduce(((total, cartItem) => total + cartItem.quantity * cartItem.price), 0);
 
-  useEffect(() => {
-    const newCartTotal = cartItems.reduce(((total, cartItem) => total + cartItem.quantity * cartItem.price), 0);
-    setCartTotal(newCartTotal);
-  }, [cartItems])
+    dispatch({
+      type: CartActionTypes.SET_CART_ITEMS,
+      payload: {
+        cartItems: newCartItems,
+        cartCount: newCartCount,
+        cartTotal: newCartTotal
+      }
+    });
+  }
 
   const addItemToCart = (productToAdd: Product) => {
-    setCartItems(addCartItem(cartItems, productToAdd));
+    const newCartItems = addCartItem(cartItems, productToAdd);
+    updateCartItemsReducer(newCartItems);
   }
 
   const removeItemFromCart = (cartItemToRemoved: CartItemModel) => {
-    setCartItems(removeCartItem(cartItems, cartItemToRemoved));
+    const newCartItems = removeCartItem(cartItems, cartItemToRemoved);
+    updateCartItemsReducer(newCartItems);
   }
 
   const clearItemFromCart = (cartItemToClear: CartItemModel) => {
-    setCartItems(clearCartItem(cartItems, cartItemToClear));
+    const newCartItems = clearCartItem(cartItems, cartItemToClear);
+    updateCartItemsReducer(newCartItems);
   }
 
   return (<CartContext.Provider
     value={{
       isCartOpen,
-      setIsCartOpen,
+      setIsCartOpen: () => {},
       cartItems,
       addItemToCart,
       removeItemFromCart,
       clearItemFromCart,
       cartCount,
-      cartTotal}}
+      cartTotal
+    }}
   >
     {children}
   </CartContext.Provider>);
