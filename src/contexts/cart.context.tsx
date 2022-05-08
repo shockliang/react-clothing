@@ -1,6 +1,7 @@
 import {createContext, FC, useReducer} from "react";
 import {CartItemModel} from "../models/cart-item";
 import {Product} from "../models/product";
+import {createAction} from "../utils/reducer/reducer.utils";
 
 interface CartContextInterface {
   isCartOpen: boolean,
@@ -38,20 +39,14 @@ const INITIAL_STATE: CartState = {
   cartTotal: 0
 };
 
-enum CartActionTypes {
+export enum CartActionTypes {
   SET_CART_ITEMS = 'SET_CART_ITEMS',
   SET_CART_OPEN = 'SET_CART_OPEN'
 }
 
 interface CartAction {
   type: CartActionTypes,
-  payload: CartActionPayload
-}
-
-interface CartActionPayload {
-  cartItems: CartItemModel[],
-  cartCount: number,
-  cartTotal: number
+  payload: any
 }
 
 const cartReducer = (state: CartState, action: CartAction) => {
@@ -62,6 +57,11 @@ const cartReducer = (state: CartState, action: CartAction) => {
       return {
         ...state,
         ...payload
+      }
+    case CartActionTypes.SET_CART_OPEN:
+      return {
+        ...state,
+        isCartOpen: payload
       }
     default:
       throw new Error(`Unhandled type of ${type} in cartReducer`);
@@ -108,14 +108,17 @@ export const CartProvider: FC = ({children}) => {
     const newCartTotal = newCartItems
       .reduce(((total, cartItem) => total + cartItem.quantity * cartItem.price), 0);
 
-    dispatch({
-      type: CartActionTypes.SET_CART_ITEMS,
-      payload: {
+    dispatch(createAction(
+      CartActionTypes.SET_CART_ITEMS,
+      {
         cartItems: newCartItems,
         cartCount: newCartCount,
         cartTotal: newCartTotal
-      }
-    });
+      }));
+  }
+
+  const setIsCartOpen = (isCartOpen: boolean) => {
+    dispatch(createAction(CartActionTypes.SET_CART_OPEN, isCartOpen));
   }
 
   const addItemToCart = (productToAdd: Product) => {
@@ -136,7 +139,7 @@ export const CartProvider: FC = ({children}) => {
   return (<CartContext.Provider
     value={{
       isCartOpen,
-      setIsCartOpen: () => {},
+      setIsCartOpen,
       cartItems,
       addItemToCart,
       removeItemFromCart,
