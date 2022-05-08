@@ -1,7 +1,7 @@
 import {createContext, FC, useReducer} from "react";
 import {CartItemModel} from "../models/cart-item";
 import {Product} from "../models/product";
-import {createAction} from "../utils/reducer/reducer.utils";
+import {createCartAction} from "../utils/reducer/reducer.utils";
 
 interface CartContextInterface {
   isCartOpen: boolean,
@@ -108,7 +108,7 @@ export const CartProvider: FC = ({children}) => {
     const newCartTotal = newCartItems
       .reduce(((total, cartItem) => total + cartItem.quantity * cartItem.price), 0);
 
-    dispatch(createAction(
+    dispatch(createCartAction(
       CartActionTypes.SET_CART_ITEMS,
       {
         cartItems: newCartItems,
@@ -118,7 +118,7 @@ export const CartProvider: FC = ({children}) => {
   }
 
   const setIsCartOpen = (isCartOpen: boolean) => {
-    dispatch(createAction(CartActionTypes.SET_CART_OPEN, isCartOpen));
+    dispatch(createCartAction(CartActionTypes.SET_CART_OPEN, isCartOpen));
   }
 
   const addItemToCart = (productToAdd: Product) => {
