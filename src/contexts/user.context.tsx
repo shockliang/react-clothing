@@ -15,7 +15,7 @@ const defaultState: UserContextInterface = {
 
 export const UserContext = createContext<UserContextInterface>(defaultState);
 
-export enum UserActionTypes {
+enum UserActionTypes {
   SET_CURRENT_USER = 'SET_CURRENT_USER',
 }
 

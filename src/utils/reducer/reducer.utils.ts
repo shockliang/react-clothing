@@ -1,5 +1,5 @@
 import {CartActionTypes} from "../../contexts/cart.context";
-import {UserActionTypes} from "../../contexts/user.context";
+import {UserActionTypes} from "../../store/user/user.types";
 
 export const createCartAction = (type: CartActionTypes, payload: any) => {
   return {type, payload}

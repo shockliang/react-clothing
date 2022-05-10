@@ -1,8 +1,5 @@
 import {UserInfo} from "firebase/auth";
-
-export enum UserActionTypes {
-  SET_CURRENT_USER = 'SET_CURRENT_USER',
-}
+import {UserActionTypes} from "./user.types";
 
 interface UserAction {
   type: UserActionTypes,
