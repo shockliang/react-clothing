@@ -1,26 +1,26 @@
-import {Product} from "../../models/product";
 import {CategoriesActionTypes} from "./category.types";
+import {ShopData} from "../../models/shop-data";
 
 interface CategoriesState {
-  categoriesMap: Map<string, Product[]>
+  categories: ShopData[]
 }
 
 interface CategoriesAction {
   type: CategoriesActionTypes,
-  payload: Map<string, Product[]>
+  payload: ShopData[]
 }
 
 export const CATEGORIES_INITIAL_STATE : CategoriesState = {
-  categoriesMap: new Map<string, Product[]>()
+  categories: []
 }
 
 export const categoriesReducer = (state: CategoriesState = CATEGORIES_INITIAL_STATE, action: CategoriesAction) => {
   const {type, payload} = action;
   switch (type) {
-    case CategoriesActionTypes.SET_CATEGORIES_MAP:
+    case CategoriesActionTypes.SET_CATEGORIES:
       return {
         ...state,
-        categoriesMap: payload
+        categories: payload
       }
     default:
         return state;
