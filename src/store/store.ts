@@ -10,7 +10,7 @@ import {UserActionTypes} from "./user/user.types";
 const persistConfig = {
   key: 'root',
   storage,
-  blocklist: ['user']
+  whitelist: ['cart']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
