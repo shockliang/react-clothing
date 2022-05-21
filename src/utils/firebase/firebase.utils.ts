@@ -17,7 +17,6 @@ import {
   CollectionReference,
 } from 'firebase/firestore';
 import {ShopData} from "../../models/shop-data";
-import {Product} from "../../models/product";
 
 const firebaseConfig = {
   apiKey: "apikey",
@@ -42,7 +41,7 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleAut
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (collectionKey: string, objectsToAdd: ShopData[]) => {
+export const addCollectionAndDocuments = async (collectionKey: string, objectsToAdd: ShopData[]): Promise<void> => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
 
@@ -55,8 +54,7 @@ export const addCollectionAndDocuments = async (collectionKey: string, objectsTo
   console.log('batch done');
 }
 
-export const getCategoriesAndDocuments = async () => {
-
+export const getCategoriesAndDocuments = async (): Promise<ShopData[]> => {
   const collectionRef = collection(db, 'categories') as CollectionReference<ShopData>
   const q = query(collectionRef);
   const querySnapshot = await getDocs(q);
