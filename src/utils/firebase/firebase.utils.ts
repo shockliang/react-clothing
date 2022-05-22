@@ -8,13 +8,12 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
-  NextOrObserver,
-  UserInfo
+  User,
 } from 'firebase/auth'
 import {
   getFirestore, doc, getDoc, setDoc,
   collection, writeBatch, query, getDocs,
-  CollectionReference,
+  CollectionReference, QueryDocumentSnapshot
 } from 'firebase/firestore';
 import {ShopData} from "../../models/shop-data";
 
@@ -61,10 +60,24 @@ export const getCategoriesAndDocuments = async (): Promise<ShopData[]> => {
   return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
 };
 
-export const createUserDocumentFromAuth = async (userAuth: UserInfo | undefined, additionalInformation: any) => {
+export type AdditionalInformation = {
+  displayName?: string;
+};
+
+export type UserData = {
+  createdAt: Date;
+  displayName: string;
+  email: string;
+};
+
+export const createUserDocumentFromAuth = async (
+  userAuth: User,
+  additionalInformation = {} as AdditionalInformation
+): Promise<void | QueryDocumentSnapshot<UserData>> => {
   if (!userAuth) return;
 
   const userDocRef = doc(db, 'users', userAuth.uid);
+
   const userSnapshot = await getDoc(userDocRef);
 
   if (!userSnapshot.exists()) {
@@ -76,15 +89,15 @@ export const createUserDocumentFromAuth = async (userAuth: UserInfo | undefined,
         displayName,
         email,
         createdAt,
-        ...additionalInformation
+        ...additionalInformation,
       });
-    } catch (e: any) {
-      console.log('error creating the user', e.message);
+    } catch (error) {
+      console.log('error creating the user', error);
     }
   }
 
-  return userDocRef;
-}
+  return userSnapshot as unknown as QueryDocumentSnapshot<UserData>;
+};
 
 export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
@@ -100,9 +113,9 @@ export const signInAuthUserWithEmailAndPassword = async (email: string, password
 
 export const signOutUser = async () => await signOut(auth);
 
-export const onAuthStateChangedListener = (callback: NextOrObserver<UserInfo>) => onAuthStateChanged(auth, callback);
+// export const onAuthStateChangedListener = (callback: NextOrObserver<UserInfo>) => onAuthStateChanged(auth, callback);
 
-export const getCurrentUser = () => {
+export const getCurrentUser = (): Promise<User | null> => {
   return new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(
       auth,
@@ -110,6 +123,7 @@ export const getCurrentUser = () => {
         unsubscribe();
         resolve(userAuth);
       },
-      reject)
-  })
-}
+      reject
+    );
+  });
+};
