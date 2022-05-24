@@ -1,7 +1,12 @@
 import {User, UserInfo} from "firebase/auth";
-import {createUserAction} from "../../utils/reducer/reducer.utils";
+import {ActionWithPayload, createUserAction} from "../../utils/reducer/reducer.utils";
 import {UserActionTypes} from "./user.types";
 import {UserData} from "../../utils/firebase/firebase.utils";
+
+export type EmailSignInStart = ActionWithPayload<
+  UserActionTypes.EMAIL_SIGN_IN_START,
+  { email: string; password: string }
+  >;
 
 export const setCurrentUser = (user: UserInfo | undefined) =>
   createUserAction(UserActionTypes.SET_CURRENT_USER, user);

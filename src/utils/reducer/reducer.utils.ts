@@ -13,3 +13,8 @@ export const createUserAction = (type: UserActionTypes, payload: any) => {
 export const createCategoriesAction = (type: CategoriesActionTypes, payload: any) => {
   return {type, payload}
 }
+
+export type ActionWithPayload<T, P> = {
+  type: T;
+  payload: P;
+};

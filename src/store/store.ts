@@ -23,7 +23,8 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: [UserActionTypes.SET_CURRENT_USER, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActions: [UserActionTypes.SET_CURRENT_USER, UserActionTypes.SIGN_IN_SUCCESS,
+          FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         ignoredPaths: ["user.currentUser"]
       },
     }).concat(middlewares),
