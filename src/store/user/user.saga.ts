@@ -5,14 +5,15 @@ import {
   createUserDocumentFromAuth,
   getCurrentUser,
   signInAuthUserWithEmailAndPassword,
-  signInWithGooglePopup
+  signInWithGooglePopup,
+  signOutUser
 } from "../../utils/firebase/firebase.utils";
 import {UserActionTypes} from "./user.types";
 import {User} from "firebase/auth";
 import {
   EmailSignInStart,
   signInFailed,
-  signInSuccess,
+  signInSuccess, signOutFailed, signOutSuccess,
   signUpFailed,
   SignUpStart,
   signUpSuccess,
@@ -28,6 +29,15 @@ export function* getSnapshotFromUserAuth(userAuth: User, additionalDetails?: Add
     }
   } catch (error) {
     yield* put(signInFailed(error as Error))
+  }
+}
+
+export function* signOut() {
+  try {
+    yield* call(signOutUser);
+    yield* put(signOutSuccess());
+  }catch (error) {
+    yield* put(signOutFailed(error as Error))
   }
 }
 
@@ -80,6 +90,10 @@ export function* isUserAuthenticated() {
   }
 }
 
+export function* onSignOutStart() {
+  yield* takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
+}
+
 export function* onSignUpSuccess() {
   yield* takeLatest(UserActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
@@ -106,6 +120,7 @@ export function* userSagas() {
     call(onGoogleSignInStart),
     call(onEmailSignInStart),
     call(onSignUpStart),
-    call(onSignUpSuccess)
+    call(onSignUpSuccess),
+    call(onSignOutStart)
   ]);
 }
