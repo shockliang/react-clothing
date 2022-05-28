@@ -1,12 +1,22 @@
-import {createCategoriesAction} from "../../utils/reducer/reducer.utils";
-import {CategoriesActionTypes} from "./category.types";
-import {ShopData} from "../../models/shop-data";
+import {Action, ActionWithPayload, createAction} from "../../utils/reducer/reducer.utils";
+import {CategoriesActionTypes, Category} from "./category.types";
 
-export const fetchCategoriesStart = () =>
-  createCategoriesAction(CategoriesActionTypes.FETCH_CATEGORIES_START, null);
+export type FetchCategoriesStart = Action<CategoriesActionTypes.FETCH_CATEGORIES_START>;
 
-export const fetchCategoriesSuccess = (categories: ShopData[]) =>
-  createCategoriesAction(CategoriesActionTypes.FETCH_CATEGORIES_SUCCESS, categories);
+export type FetchCategoriesSuccess = ActionWithPayload<CategoriesActionTypes.FETCH_CATEGORIES_SUCCESS, Category[]>
 
-export const fetchCategoriesFailed = (error: any) =>
-  createCategoriesAction(CategoriesActionTypes.FETCH_CATEGORIES_FAILED, error);
+export type FetchCategoriesFailed = ActionWithPayload<CategoriesActionTypes.FETCH_CATEGORIES_FAILED, Error>
+
+export type CategoryAction =
+  FetchCategoriesStart |
+  FetchCategoriesSuccess |
+  FetchCategoriesFailed;
+
+export const fetchCategoriesStart = (): FetchCategoriesStart =>
+  createAction(CategoriesActionTypes.FETCH_CATEGORIES_START);
+
+export const fetchCategoriesSuccess = (categories: Category[]): FetchCategoriesSuccess =>
+  createAction(CategoriesActionTypes.FETCH_CATEGORIES_SUCCESS, categories);
+
+export const fetchCategoriesFailed = (error: Error): FetchCategoriesFailed =>
+  createAction(CategoriesActionTypes.FETCH_CATEGORIES_FAILED, error);
