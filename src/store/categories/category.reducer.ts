@@ -1,10 +1,11 @@
-import {CategoriesActionTypes} from "./category.types";
+import {CategoriesActionTypes, Category} from "./category.types";
 import {ShopData} from "../../models/shop-data";
+import {CategoryAction} from "./category.action";
 
-interface CategoriesState {
-  categories: ShopData[],
-  isLoading: boolean,
-  error: any
+export type CategoriesState = {
+  readonly categories: Category[],
+  readonly isLoading: boolean,
+  readonly error: Error | null
 }
 
 interface CategoriesAction {
@@ -12,15 +13,15 @@ interface CategoriesAction {
   payload: ShopData[]
 }
 
-export const CATEGORIES_INITIAL_STATE : CategoriesState = {
+export const CATEGORIES_INITIAL_STATE: CategoriesState = {
   categories: [],
   isLoading: false,
   error: null
 }
 
-export const categoriesReducer = (state: CategoriesState = CATEGORIES_INITIAL_STATE, action: CategoriesAction) => {
-  const {type, payload} = action;
-  switch (type) {
+export const categoriesReducer = (state = CATEGORIES_INITIAL_STATE,
+                                  action = {} as CategoryAction) => {
+  switch (action.type) {
     case CategoriesActionTypes.FETCH_CATEGORIES_START:
       return {
         ...state,
@@ -29,16 +30,16 @@ export const categoriesReducer = (state: CategoriesState = CATEGORIES_INITIAL_ST
     case CategoriesActionTypes.FETCH_CATEGORIES_SUCCESS:
       return {
         ...state,
-        categories: payload,
+        categories: action.payload,
         isLoading: false
       }
     case CategoriesActionTypes.FETCH_CATEGORIES_FAILED:
       return {
         ...state,
-        error: payload,
+        error: action.payload,
         isLoading: false
       }
     default:
-        return state;
+      return state;
   }
 }
