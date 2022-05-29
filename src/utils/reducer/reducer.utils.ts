@@ -11,10 +11,6 @@ export const createUserAction = (type: UserActionTypes, payload: any) => {
   return {type, payload}
 };
 
-export const createCategoriesAction = (type: CategoriesActionTypes, payload: any) => {
-  return {type, payload}
-}
-
 type Matchable<AC extends () => AnyAction> = AC & {
   type: ReturnType<AC>['type'];
   match(action: AnyAction): action is ReturnType<AC>
