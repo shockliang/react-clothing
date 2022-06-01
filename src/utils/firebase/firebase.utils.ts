@@ -16,6 +16,9 @@ import {
   CollectionReference, QueryDocumentSnapshot
 } from 'firebase/firestore';
 import {ShopData} from "../../models/shop-data";
+import {Category} from "../../store/categories/category.types";
+import firebase from "firebase/compat";
+import UserCredential = firebase.auth.UserCredential;
 
 const firebaseConfig = {
   apiKey: "apikey",
@@ -40,7 +43,11 @@ export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleAut
 
 export const db = getFirestore();
 
-export const addCollectionAndDocuments = async (collectionKey: string, objectsToAdd: ShopData[]): Promise<void> => {
+export type ObjectToAdd = {
+  title: string
+}
+
+export const addCollectionAndDocuments = async <T extends ObjectToAdd>(collectionKey: string, objectsToAdd: T[]): Promise<void> => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
 
@@ -53,11 +60,11 @@ export const addCollectionAndDocuments = async (collectionKey: string, objectsTo
   console.log('batch done');
 }
 
-export const getCategoriesAndDocuments = async (): Promise<ShopData[]> => {
-  const collectionRef = collection(db, 'categories') as CollectionReference<ShopData>
+export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
+  const collectionRef = collection(db, 'categories')
   const q = query(collectionRef);
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(docSnapshot => docSnapshot.data());
+  return querySnapshot.docs.map(docSnapshot => docSnapshot.data() as Category);
 };
 
 export type AdditionalInformation = {
@@ -96,7 +103,7 @@ export const createUserDocumentFromAuth = async (
     }
   }
 
-  return userSnapshot as unknown as QueryDocumentSnapshot<UserData>;
+  return userSnapshot as QueryDocumentSnapshot<UserData>;
 };
 
 export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
