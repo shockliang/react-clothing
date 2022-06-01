@@ -3,7 +3,7 @@ import {RootState} from "../root-reducer";
 import {CartItemModel} from "../../models/cart-item";
 import {CartState} from "./cart.reducer";
 
-const selectCartReducer = (state: RootState) => state.cart;
+const selectCartReducer = (state: RootState): CartState => state.cart;
 
 export const selectCartItems = createSelector(
   [selectCartReducer],

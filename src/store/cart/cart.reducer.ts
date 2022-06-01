@@ -1,14 +1,10 @@
-import {CartItemModel} from "../../models/cart-item";
-import {CartActionTypes} from "./cart.types";
+import {AnyAction} from "redux";
+import {CartItem} from "./cart.types";
+import {setCartItems, setIsCartOpen} from "./cart.action";
 
-export interface CartState {
+export type CartState = {
   isCartOpen: boolean,
-  cartItems: CartItemModel[],
-}
-
-interface CartAction {
-  type: CartActionTypes,
-  payload: CartItemModel[] | boolean
+  cartItems: CartItem[],
 }
 
 export const CART_INITIAL_STATE: CartState = {
@@ -16,21 +12,19 @@ export const CART_INITIAL_STATE: CartState = {
   cartItems: [],
 }
 
-export const cartReducer = (state: CartState = CART_INITIAL_STATE, action: CartAction) => {
-  const {type, payload} = action;
-
-  switch (type) {
-    case CartActionTypes.SET_CART_ITEMS:
-      return {
-        ...state,
-        cartItems: payload
-      };
-    case CartActionTypes.SET_CART_OPEN:
-      return {
-        ...state,
-        isCartOpen: payload
-      };
-    default:
-      return state;
+export const cartReducer = (state: CartState = CART_INITIAL_STATE, action: AnyAction): CartState => {
+  if (setIsCartOpen.match(action)) {
+    return {
+      ...state,
+      isCartOpen: action.payload
+    };
   }
+
+  if (setCartItems.match(action)) {
+    return {
+      ...state,
+      cartItems: action.payload
+    }
+  }
+  return state;
 }
