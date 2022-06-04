@@ -1,5 +1,3 @@
-import {UserInfo} from "firebase/auth";
-
 export enum UserActionTypes {
   SET_CURRENT_USER = 'user/SET_CURRENT_USER',
   CHECK_USER_SESSION = 'user/CHECK_USER_SESSION',
@@ -13,13 +11,4 @@ export enum UserActionTypes {
   SIGN_OUT_START = 'user/SIGN_OUT_START',
   SIGN_OUT_SUCCESS = 'user/SIGN_OUT_SUCCESS',
   SIGN_OUT_FAILED = 'user/SIGN_OUT_FAILED'
-}
-
-export interface UserAction {
-  type: UserActionTypes,
-  payload: UserInfo | null | undefined
-}
-
-export interface UserState {
-  currentUser: UserInfo | null | undefined
 }
