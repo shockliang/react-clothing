@@ -8,7 +8,7 @@ export function* fetchCategoriesAsync() {
     const categoriesArray = yield* call(getCategoriesAndDocuments);
     yield* put(fetchCategoriesSuccess(categoriesArray));
   } catch (error) {
-    yield* put(fetchCategoriesFailed(error));
+    yield* put(fetchCategoriesFailed(error as Error));
   }
 }
 
