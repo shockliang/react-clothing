@@ -1,5 +1,5 @@
 import logger from "redux-logger";
-import {rootReducer} from "./root-reducer";
+import {rootReducer, RootState} from "./root-reducer";
 import {persistStore, persistReducer, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {useDispatch} from "react-redux";
@@ -7,8 +7,13 @@ import {configureStore} from "@reduxjs/toolkit";
 import {UserActionTypes} from "./user/user.types";
 import createSagaMiddleware from 'redux-saga';
 import {rootSaga} from "./root-saga";
+import {PersistConfig} from "redux-persist/es/types";
 
-const persistConfig = {
+type ExtendedPersistConfig = PersistConfig<RootState> & {
+  whitelist: (keyof RootState)[]
+}
+
+const persistConfig: ExtendedPersistConfig = {
   key: 'root',
   storage,
   whitelist: ['cart']
