@@ -1,8 +1,4 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import {
-  signInAuthUserWithEmailAndPassword,
-  signInWithGooglePopup
-} from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button, {ButtonStyle} from "../button/button.component";
 
