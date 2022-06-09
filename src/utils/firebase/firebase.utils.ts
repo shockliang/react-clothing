@@ -13,12 +13,9 @@ import {
 import {
   getFirestore, doc, getDoc, setDoc,
   collection, writeBatch, query, getDocs,
-  CollectionReference, QueryDocumentSnapshot
+  QueryDocumentSnapshot
 } from 'firebase/firestore';
-import {ShopData} from "../../models/shop-data";
 import {Category} from "../../store/categories/category.types";
-import firebase from "firebase/compat";
-import UserCredential = firebase.auth.UserCredential;
 
 const firebaseConfig = {
   apiKey: "apikey",
