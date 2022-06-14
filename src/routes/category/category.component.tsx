@@ -7,11 +7,15 @@ import './category.styles.scss';
 import Spinner from "../../components/spinner/spinner.component";
 import {CategoryItem} from "../../store/categories/category.types";
 
+type CategoryRouteParams = {
+  category: string
+}
+
 const Category = () => {
-  const {category} = useParams();
+  const {category} = useParams<keyof CategoryRouteParams>() as CategoryRouteParams;
   const categoryMap = useSelector(selectCategoriesMap);
   const isLoading = useSelector(selectCategoriesIsLoading);
-  const [products, setProducts] = useState<CategoryItem[]>(categoryMap[category!]);
+  const [products, setProducts] = useState<CategoryItem[]>(categoryMap[category]);
 
   useEffect(() => {
     if (!category) return;
