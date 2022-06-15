@@ -1,7 +1,7 @@
-import './category-privew.styles.scss';
+import './category-privew.styles';
 import {Product} from "../../models/product";
 import ProductCard from "../product-card/product-card.component";
-import {Link} from "react-router-dom";
+import {CategoryPreviewContainer, Preview, Title} from "./category-privew.styles";
 
 interface CategoryPreviewProps {
   title: string,
@@ -10,20 +10,18 @@ interface CategoryPreviewProps {
 
 const CategoryPreview = ({title, products}: CategoryPreviewProps) => {
   return (
-    <div className={"category-preview-container"}>
+    <CategoryPreviewContainer>
       <h2>
-        <Link to={title} className={"title"}>
-          {title.toUpperCase()}
-        </Link>
+        <Title to={title}>{title.toUpperCase()}</Title>
       </h2>
-      <div className={"preview"}>
+      <Preview>
         {
           products
             .filter((_, idx) => idx < 4)
-            .map((product) => (<ProductCard key={product.id} product={product} />))
+            .map((product) => (<ProductCard key={product.id} product={product}/>))
         }
-      </div>
-    </div>
+      </Preview>
+    </CategoryPreviewContainer>
   )
 }
 
