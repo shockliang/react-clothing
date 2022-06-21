@@ -4,7 +4,8 @@ import {AuthError, AuthErrorCodes} from 'firebase/auth';
 import {signUpStart} from "../../store/user/user.action";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import './sign-up-form.styles.scss';
+import './sign-up-form.styles';
+import {SignUpContainer} from "./sign-up-form.styles";
 
 interface DefaultFormFields {
   displayName: string,
@@ -54,7 +55,7 @@ const SignUpForm = () => {
   }
 
   return (
-    <div className={"sign-up-container"}>
+    <SignUpContainer>
       <h2>Don't have an account?</h2>
       <span>Sign up with your email and password</span>
       <form onSubmit={handleSubmit}>
@@ -96,7 +97,7 @@ const SignUpForm = () => {
 
         <Button type={"submit"}>Sign Up</Button>
       </form>
-    </div>
+    </SignUpContainer>
   );
 };
 
