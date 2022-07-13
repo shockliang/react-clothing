@@ -1,5 +1,8 @@
-import React, {ButtonHTMLAttributes, FC, ReactChildren} from "react";
-import {BaseButton, ButtonSpinner, GoogleSignInButton, InvertedButton} from "./button.styles";
+import React, {FC, ReactChildren} from "react";
+import {BaseButton, GoogleSignInButton, InvertedButton} from "./button.styles";
+import {Button as NextUIButton, Loading} from '@nextui-org/react';
+import {ButtonProps} from "@nextui-org/react/types/button/button";
+
 
 export enum ButtonStyle {Google, Inverted}
 
@@ -14,18 +17,19 @@ const getButton = (buttonType: ButtonStyle | undefined): typeof BaseButton => {
   }
 }
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface CustomNextUIButtonProps extends ButtonProps {
   children?: ReactChildren | ReactChildren[] | string | string[],
   buttonType?: ButtonStyle,
   isLoading?: boolean
 }
 
-const Button: FC<ButtonProps> = ({children, isLoading, buttonType, ...otherProps}: ButtonProps) => {
-  const CustomButton = getButton(buttonType);
+const Button: FC<CustomNextUIButtonProps> = ({children, isLoading, buttonType, ...otherProps}: CustomNextUIButtonProps) => {
   return (
-    <CustomButton disabled={isLoading} {...otherProps}>
-      {isLoading ? <ButtonSpinner/> : children}
-    </CustomButton>
+    <NextUIButton disabled={isLoading} {...otherProps} shadow color="gradient" auto>
+      {isLoading
+        ? <Loading type="points-opacity" color="currentColor" size="sm"/>
+        : children}
+    </NextUIButton>
   )
 }
 

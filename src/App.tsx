@@ -7,6 +7,7 @@ import Checkout from "./routes/checkout/checkout.component";
 import {useEffect} from "react";
 import {useDispatch} from "react-redux";
 import {checkUserSession} from "./store/user/user.action";
+import {NextUIProvider, createTheme} from '@nextui-org/react';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -15,15 +16,21 @@ const App = () => {
     dispatch(checkUserSession())
   }, []);
 
+  const theme = createTheme({
+    type: "dark", // it could be "light" or "dark"
+  })
+
   return (
-    <Routes>
-      <Route path={"/"} element={<Navigation/>}>
-        <Route index element={<Home/>}/>
-        <Route path={"shop/*"} element={<Shop/>}/>
-        <Route path={"auth"} element={<Authentication/>}/>
-        <Route path={"checkout"} element={<Checkout/>}/>
-      </Route>
-    </Routes>
+    <NextUIProvider theme={theme}>
+      <Routes>
+        <Route path={"/"} element={<Navigation/>}>
+          <Route index element={<Home/>}/>
+          <Route path={"shop/*"} element={<Shop/>}/>
+          <Route path={"auth"} element={<Authentication/>}/>
+          <Route path={"checkout"} element={<Checkout/>}/>
+        </Route>
+      </Routes>
+    </NextUIProvider>
   )
 }
 
