@@ -1,11 +1,10 @@
 import {ChangeEvent, FormEvent, useState} from "react";
-import React from "react";
 import Button, {ButtonStyle} from "../button/button.component";
 import './sign-in-form.styles';
 import {useDispatch} from "react-redux";
 import {emailSignInStart, googleSignInStart} from "../../store/user/user.action";
 import {ButtonsContainer, SignUpContainer} from "./sign-in-form.styles";
-import { Input, useInput, Grid } from "@nextui-org/react";
+import { Input, Grid } from "@nextui-org/react";
 import {FormElement} from "@nextui-org/react/types/input/input-props";
 
 
@@ -18,14 +17,6 @@ const defaultFormFields: DefaultFormFields = {
   email: '',
   password: '',
 }
-
-type SimpleColors =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'success'
-  | 'warning'
-  | 'error';
 
 const SignInForm = () => {
   const dispatch = useDispatch();
@@ -84,6 +75,8 @@ const SignInForm = () => {
               placeholder="Enter your password"
               onChange={handleChange}
               required
+              name={"password"}
+              value={password}
             />
           </Grid>
         </Grid.Container>
