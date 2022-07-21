@@ -6,6 +6,8 @@ import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import './sign-up-form.styles';
 import {SignUpContainer} from "./sign-up-form.styles";
+import { Input, Grid } from "@nextui-org/react";
+import {FormElement} from "@nextui-org/react/types/input/input-props";
 
 interface DefaultFormFields {
   displayName: string,
@@ -26,7 +28,7 @@ const SignUpForm = () => {
   const {displayName, email, password, confirmPassword} = formFields;
   const dispatch = useDispatch();
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: ChangeEvent<FormElement>) => {
     const {name, value} = event.target;
     setFormFields({...formFields, [name]: value});
   }
@@ -59,41 +61,83 @@ const SignUpForm = () => {
       <h2>Don't have an account?</h2>
       <span>Sign up with your email and password</span>
       <form onSubmit={handleSubmit}>
-        <FormInput
-          label={"Display Name"}
-          type={"text"}
-          required
-          onChange={handleChange}
-          name={"displayName"}
-          value={displayName}
-        />
+        <Grid.Container gap={4}>
+          <Grid>
+            <Input
+              label={"Display Name"}
+              type={"text"}
+              required
+              onChange={handleChange}
+              name={"displayName"}
+              value={displayName}
+            />
+          </Grid>
+          <Grid>
+            <Input
+              label={"Email"}
+              type={"email"}
+              required
+              onChange={handleChange}
+              name={"email"}
+              value={email}
+            />
+          </Grid>
+          <Grid>
+            <Input
+              label={"Password"}
+              type={"password"}
+              required
+              onChange={handleChange}
+              name={"password"}
+              value={password}
+            />
+          </Grid>
+          <Grid>
+            <Input
+              label={"Confirm Password"}
+              type={"password"}
+              required
+              onChange={handleChange}
+              name={"confirmPassword"}
+              value={confirmPassword}
+            />
+          </Grid>
+        </Grid.Container>
+        {/*<FormInput*/}
+        {/*  label={"Display Name"}*/}
+        {/*  type={"text"}*/}
+        {/*  required*/}
+        {/*  onChange={handleChange}*/}
+        {/*  name={"displayName"}*/}
+        {/*  value={displayName}*/}
+        {/*/>*/}
 
-        <FormInput
-          label={"Email"}
-          type={"email"}
-          required
-          onChange={handleChange}
-          name={"email"}
-          value={email}
-        />
+        {/*<FormInput*/}
+        {/*  label={"Email"}*/}
+        {/*  type={"email"}*/}
+        {/*  required*/}
+        {/*  onChange={handleChange}*/}
+        {/*  name={"email"}*/}
+        {/*  value={email}*/}
+        {/*/>*/}
 
-        <FormInput
-          label={"Password"}
-          type={"password"}
-          required
-          onChange={handleChange}
-          name={"password"}
-          value={password}
-        />
+        {/*<FormInput*/}
+        {/*  label={"Password"}*/}
+        {/*  type={"password"}*/}
+        {/*  required*/}
+        {/*  onChange={handleChange}*/}
+        {/*  name={"password"}*/}
+        {/*  value={password}*/}
+        {/*/>*/}
 
-        <FormInput
-          label={"Confirm Password"}
-          type={"password"}
-          required
-          onChange={handleChange}
-          name={"confirmPassword"}
-          value={confirmPassword}
-        />
+        {/*<FormInput*/}
+        {/*  label={"Confirm Password"}*/}
+        {/*  type={"password"}*/}
+        {/*  required*/}
+        {/*  onChange={handleChange}*/}
+        {/*  name={"confirmPassword"}*/}
+        {/*  value={confirmPassword}*/}
+        {/*/>*/}
 
         <Button type={"submit"}>Sign Up</Button>
       </form>
